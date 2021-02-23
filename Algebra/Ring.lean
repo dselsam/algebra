@@ -304,7 +304,7 @@ end Reflect
 open Lean Lean.Parser Lean.Parser.Tactic Lean.Elab.Term Lean.Elab.Tactic
 
 structure Options where
-  native : Bool := true
+  reduceBool : Bool := true
 
 private def mkReduceBoolAuxDecl (val : Expr) : TermElabM Name := do
   let auxName ← Lean.Elab.Term.mkAuxName `_reduceBool
@@ -329,7 +329,7 @@ def ringCore (opts : Options) : TacticM Unit := do
 
       let reflProof ← do
         let pf := mkApp2 (mkConst `Eq.refl [levelOne]) (mkConst `Bool) (mkConst `Bool.true)
-        if not opts.native then
+        if not opts.reduceBool then
           pf
         else
           let h₁ ← Meta.mkAppM `Algebra.Ring.CRExpr.toHExpr #[toExpr r₁]
@@ -354,12 +354,12 @@ def ringCore (opts : Options) : TacticM Unit := do
 syntax (name := ring) "ring" : tactic
 
 @[tactic ring] def evalRing : Tactic := fun _ =>
-  ringCore { native := false }
+  ringCore { reduceBool := false }
 
-syntax (name := ringNative) "ringNative" : tactic
+syntax (name := ringReduceBool) "ringReduceBool" : tactic
 
-@[tactic ringNative] def evalRingNative : Tactic := fun _ =>
-  ringCore { native := true }
+@[tactic ringReduceBool] def evalRingReduceBool : Tactic := fun _ =>
+  ringCore { reduceBool := true }
 
 
 end Ring
