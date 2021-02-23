@@ -125,7 +125,7 @@ instance (n : Nat) : OfNat HExpr n := ⟨int n⟩
 instance : BEq HExpr :=
   let rec beq : HExpr → HExpr → Bool
     | int n₁, int n₂ => n₁ == n₂
-    | hornerAux a₁ x₁ k₁ b₁, hornerAux a₂ x₂ k₂ b₂ => beq a₁ a₂ && x₁ == x₂ && k₁ == k₂ && beq b₁ b₂
+    | hornerAux a₁ x₁ k₁ b₁, hornerAux a₂ x₂ k₂ b₂ => x₁ == x₂ && k₁ == k₂ && beq a₁ a₂ && beq b₁ b₂
     | _, _ => false
   ⟨beq⟩
 
@@ -199,7 +199,6 @@ instance : Mul HExpr := ⟨mul⟩
 
 def pow (t : HExpr) : Nat → HExpr
   | 0   => 1
-  | 1   => t
   | k+1 => t * pow t k
 
 instance : HPow HExpr Nat HExpr := ⟨pow⟩
